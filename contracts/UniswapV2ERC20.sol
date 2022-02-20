@@ -26,6 +26,7 @@ contract UniswapV2ERC20 is IUniswapV2ERC20 {
         assembly {
             chainId := chainid
         }
+        // 나중에 서명 체크할 때 쓰임. 좀 지엽적인 내용이라서 패스.
         DOMAIN_SEPARATOR = keccak256(
             abi.encode(
                 keccak256('EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)'),
@@ -87,6 +88,7 @@ contract UniswapV2ERC20 is IUniswapV2ERC20 {
                 keccak256(abi.encode(PERMIT_TYPEHASH, owner, spender, value, nonces[owner]++, deadline))
             )
         );
+        // 이런 식으로 서명된 게 맞는지 확인하는 정의된 방법이 있다. 정도로 하고 넘어가자.
         address recoveredAddress = ecrecover(digest, v, r, s);
         require(recoveredAddress != address(0) && recoveredAddress == owner, 'UniswapV2: INVALID_SIGNATURE');
         _approve(owner, spender, value);
